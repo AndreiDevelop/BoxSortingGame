@@ -30,7 +30,7 @@ namespace BoxSortingGame
 
             await InstantiatePoolObject<T>(count);
         }
-        
+
         public async UniTask<GameObject> GetFromPool<T>() where T : Component
         {
             var key = typeof(T);
@@ -77,13 +77,20 @@ namespace BoxSortingGame
                 obj.SetActive(false);
                 PoolableObjects[key].Enqueue(obj);
 
-                await UniTask.DelayFrame(1);
+                await UniTask.DelayFrame(1, cancellationToken: _cancellationTokenSource.Token);
             }
         }
         
         private async UniTaskVoid ClearPool<T>() where T : Component
         {
             var key = typeof(T);
+            
+            if(_cancellationTokenSource!=null && _cancellationTokenSource.Token.IsCancellationRequested)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
             
             if (PoolableObjects.ContainsKey(key))
             {
