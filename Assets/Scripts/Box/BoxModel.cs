@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
@@ -12,7 +13,8 @@ namespace BoxSortingGame
         
         private PoolManager _poolManager;
         private BoxSettingsSO _boxSettings;
-        private int _spawnedBoxCount = 0;
+        
+        private List<BoxController> _boxes = new List<BoxController>();
         
         public BoxModel(BoxSettingsSO boxSettings, PoolManager poolManager)
         {
@@ -37,18 +39,42 @@ namespace BoxSortingGame
             var boxController = boxObject.GetComponent<BoxController>();
             
             boxController.Initialize(this, boxColor);
-            _spawnedBoxCount++;
 
+            _boxes.Add(boxController);
             OnBoxSpawned?.Execute(boxController);
         }
 
         public async UniTask SpawnBoxProcess()
         {
-            while (_spawnedBoxCount<_boxSettings.MaxBoxCount)
+            while (_boxes.Count < _boxSettings.MaxBoxCount)
             {
                 await UniTask.WaitForSeconds(_boxSettings.BoxSpawnDelayInSeconds);
                 await SpawnBox();
             }
+        }
+
+        public async UniTask<BoxController> GetBoxByDistance(Vector2 position)
+        {
+            BoxController selectedBox = null;
+            float maxDistance = float.MaxValue;
+
+            foreach (var box in _boxes)
+            {
+                float distance = Vector2.Distance(position, box.transform.position);
+                if (distance < maxDistance)
+                {
+                    maxDistance = distance;
+                    selectedBox = box;
+                }
+
+                await UniTask.DelayFrame(1);
+            }
+
+            if (selectedBox != null)
+            {
+                _boxes.Remove(selectedBox);
+            }
+            return selectedBox;
         }
     }
 }
