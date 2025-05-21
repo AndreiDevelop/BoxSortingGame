@@ -3,6 +3,7 @@ using UnityEngine.Serialization;
 
 namespace BoxSortingGame
 {
+    //TODO add animator?
     public class BoxController : MonoBehaviour
     {
         [SerializeField] private Rigidbody2D _rigidbody;

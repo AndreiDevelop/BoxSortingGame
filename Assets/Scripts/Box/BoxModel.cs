@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
@@ -15,6 +16,10 @@ namespace BoxSortingGame
         private BoxSettingsSO _boxSettings;
         
         private List<BoxController> _boxes = new List<BoxController>();
+
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        
+        private bool _isLockedForSearch = false;
         
         public BoxModel(BoxSettingsSO boxSettings, PoolManager poolManager)
         {
@@ -40,6 +45,8 @@ namespace BoxSortingGame
             
             boxController.Initialize(this, boxColor);
 
+            await UniTask.WaitWhile(() => _isLockedForSearch);
+            
             _boxes.Add(boxController);
             OnBoxSpawned?.Execute(boxController);
         }
@@ -56,9 +63,12 @@ namespace BoxSortingGame
 
         public async UniTask<BoxController> GetBoxByDistance(Vector2 position)
         {
+            _isLockedForSearch = true;
+            
             BoxController selectedBox = null;
             float maxDistance = float.MaxValue;
-
+            
+            //TODO fix error
             foreach (var box in _boxes)
             {
                 float distance = Vector2.Distance(position, box.transform.position);
@@ -75,6 +85,8 @@ namespace BoxSortingGame
             {
                 _boxes.Remove(selectedBox);
             }
+            
+            _isLockedForSearch = false;
             return selectedBox;
         }
     }

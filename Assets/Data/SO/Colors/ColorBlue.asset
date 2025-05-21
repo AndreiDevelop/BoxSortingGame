@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: b5f4d182cb92e4b3691e2f8f6a8b7467, type: 3}
   m_Name: ColorBlue
   m_EditorClassIdentifier: Assembly-CSharp:BoxSortingGame:ColorDataSO
   _data:
-    id: f1e5123f-2340-4830-9c8a-ddd866e74295
-    color: {r: 0, g: 0.47009897, b: 1, a: 1}
+    id: 43aa7743-29d1-4460-9f4d-e2e1fba908c7
+    color: {r: 0, g: 0.53150964, b: 1, a: 1}
