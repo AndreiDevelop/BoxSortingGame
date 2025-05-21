@@ -23,7 +23,7 @@ namespace BoxSortingGame
             box.transform.SetParent(transform);
             box.transform.position = transform.position;
             
-            box.Activate(transform.forward * _boxActivationSpeed);
+            box.Activate(_boxActivationSpeed);
         }
     }
 }

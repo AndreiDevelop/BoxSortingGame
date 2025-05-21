@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa9e163d31934023a4408f193020ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boxActivationSpeed: 10
+  _boxActivationSpeed: 1
