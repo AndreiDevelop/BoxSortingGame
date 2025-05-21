@@ -6,20 +6,19 @@ using Zenject;
 
 namespace BoxSortingGame
 {
-    //TODO refactoring remove MonoBehaviour
-    public class BoxManager : MonoBehaviour
+    public class BoxModel
     {
-        [SerializeField] private BoxSettingsSO _boxSettings;
-        [SerializeField] private Transform _boxSpawnPoint;
-        
         public ReactiveCommand<BoxController> OnBoxSpawned = new ReactiveCommand<BoxController>();
         
-        [Inject] private PoolManager _poolManager;
-
+        private PoolManager _poolManager;
+        private BoxSettingsSO _boxSettings;
         private int _spawnedBoxCount = 0;
         
-        private void Start()
+        public BoxModel(BoxSettingsSO boxSettings, PoolManager poolManager)
         {
+            _poolManager = poolManager;
+            _boxSettings = boxSettings;
+
             _poolManager.AddToPool<BoxController>(_boxSettings.BoxPrefab, _boxSettings.MaxBoxCount);
             
             SpawnBoxProcess().
@@ -34,13 +33,13 @@ namespace BoxSortingGame
             var boxObject = await _poolManager.
                 GetFromPool<BoxController>();
             
-            boxObject.transform.position = _boxSpawnPoint.position;
-            
             //TODO refactoring
             var boxController = boxObject.GetComponent<BoxController>();
             
             boxController.Initialize(this, boxColor);
             _spawnedBoxCount++;
+
+            OnBoxSpawned?.Execute(boxController);
         }
 
         public async UniTask SpawnBoxProcess()

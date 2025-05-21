@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoxSettingsSO
   m_EditorClassIdentifier: 
   _boxPrefab: {fileID: 7075909227916581699, guid: 57b35db96dc284890a59117279dc1348, type: 3}
-  _maxBoxCount: 15
+  _maxBoxCount: 50
   _boxSpawnDelayInSeconds: 1
   _boxColors:
   - color: {r: 1, g: 0, b: 0, a: 1}

@@ -5,7 +5,10 @@ namespace BoxSortingGame
 {
     public class SceneGameplayInstaller : MonoInstaller
     {
-        [SerializeField] private BoxManager _boxManager;
+        [Header("SO")]
+        [SerializeField] private BoxSettingsSO _boxSettingsSO;
+        
+        [Header("Managers")]
         [SerializeField] private PoolManager _poolManager;
         
         public override void InstallBindings()
@@ -14,8 +17,9 @@ namespace BoxSortingGame
                 FromInstance(_poolManager).
                 AsSingle();
 
-            Container.Bind<BoxManager>().
-                FromInstance(_boxManager).
+            var boxModel = new BoxModel(_boxSettingsSO, _poolManager);
+            Container.Bind<BoxModel>().
+                FromInstance(boxModel).
                 AsSingle();
         }
     }

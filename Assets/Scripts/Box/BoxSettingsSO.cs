@@ -30,7 +30,7 @@ namespace BoxSortingGame
             
             if(_boxColors.Count == 0)
             {
-                Debug.LogError("Box Colors liast is empty.");
+                Debug.LogError("Box Colors list is empty.");
                 return color;
             }
             
@@ -41,6 +41,7 @@ namespace BoxSortingGame
                 if (chance <= chanceSum)
                 {
                     color = boxColor.color;
+                    break;
                 }
             }
 
