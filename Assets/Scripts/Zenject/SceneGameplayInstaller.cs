@@ -21,6 +21,9 @@ namespace BoxSortingGame
             Container.Bind<BoxModel>().
                 FromInstance(boxModel).
                 AsSingle();
+            
+            Container.Bind<DropZoneModel>().
+                AsSingle();
         }
     }
 }

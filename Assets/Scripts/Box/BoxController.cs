@@ -9,13 +9,31 @@ namespace BoxSortingGame
         [SerializeField] private SpriteRenderer _spriteRenderer;
         
         private BoxModel _boxModel;
+
+        private ColorData _colorData;
+        public ColorData ColorData => _colorData;
         
-        public void Initialize(BoxModel boxModel, Color color)
+        public void Initialize(BoxModel boxModel, ColorData colorData)
         {
             _boxModel = boxModel;
-            _spriteRenderer.material.color = color;
+            _colorData = colorData;
+            _spriteRenderer.material.color = colorData.color;
         }
 
+        public void AttachBox(Transform target)
+        {
+            _rigidbody.linearVelocity = Vector2.zero;
+            _rigidbody.simulated = false;
+            _rigidbody.transform.position = target.position;
+            _rigidbody.transform.SetParent(target);
+        }
+        
+        public void DeattachBox()
+        {
+            _rigidbody.simulated = true;
+            _rigidbody.transform.SetParent(null);
+        }
+        
         public void Activate(float boxActivationSpeed)
         {
             float rotationVelocity = Random.Range(-360f, 360f);

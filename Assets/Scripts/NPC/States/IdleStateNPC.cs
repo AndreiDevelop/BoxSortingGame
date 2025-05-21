@@ -6,9 +6,14 @@ namespace BoxSortingGame
 {
     public class IdleStateNPC : IStateNPC
     {
-        [Inject] private BoxModel _boxModel;
-        
+        private BoxModel _boxModel;
         private NPCController _npc;
+        
+        public IdleStateNPC(BoxModel boxModel)
+        {
+            _boxModel = boxModel;
+        }
+        
         public void Enter(NPCController npc)
         {
             _npc = npc;

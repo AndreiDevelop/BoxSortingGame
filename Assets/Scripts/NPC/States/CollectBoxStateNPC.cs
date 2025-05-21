@@ -13,18 +13,14 @@ namespace BoxSortingGame
 
         public async UniTask Execute()
         {
-            /*
             if (_npc.BoxTarget == null)
             {
                 _npc.ChangeState(_npc.IdleState);
                 return;
             }
-            
-            await _npc.MoveToBox();
-            
-            _npc.CollectBox();
-            _npc.ChangeState(_npc.IdleState);
-            */
+
+            _npc.BoxTarget.AttachBox(_npc.transform);
+            _npc.ChangeState(_npc.MoveToDropZoneState);
         }
 
         public void Exit()

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BoxSortingGame
 {
     [System.Serializable]
     public struct BoxColor
     {
-        public Color color;
+        public ColorDataSO colorDataSO;
         public float colorChance;
     }
     
@@ -22,10 +23,10 @@ namespace BoxSortingGame
         public int MaxBoxCount => _maxBoxCount;
         public float BoxSpawnDelayInSeconds => _boxSpawnDelayInSeconds;
 
-        public Color GetBoxColor(float chance)
+        public ColorData GetBoxColorData(float chance)
         {
             float chanceSum = 0f;
-            Color color = Color.white;
+            ColorData color = default;
             
             if(_boxColors.Count == 0)
             {
@@ -39,7 +40,7 @@ namespace BoxSortingGame
 
                 if (chance <= chanceSum)
                 {
-                    color = boxColor.color;
+                    color = boxColor.colorDataSO.Data;
                     break;
                 }
             }

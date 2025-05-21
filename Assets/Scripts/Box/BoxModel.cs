@@ -30,7 +30,7 @@ namespace BoxSortingGame
         public async UniTask SpawnBox()
         {
             float boxChance = UnityEngine.Random.Range(0f, 1f);
-            var boxColor = _boxSettings.GetBoxColor(boxChance);
+            var boxColor = _boxSettings.GetBoxColorData(boxChance);
             
             var boxObject = await _poolManager.
                 GetFromPool<BoxController>();
@@ -48,6 +48,7 @@ namespace BoxSortingGame
         {
             while (_boxes.Count < _boxSettings.MaxBoxCount)
             {
+                //TODO make random delay
                 await UniTask.WaitForSeconds(_boxSettings.BoxSpawnDelayInSeconds);
                 await SpawnBox();
             }

@@ -16,7 +16,7 @@ MonoBehaviour:
   _maxBoxCount: 10
   _boxSpawnDelayInSeconds: 1
   _boxColors:
-  - color: {r: 1, g: 0, b: 0, a: 1}
+  - colorDataSO: {fileID: 11400000, guid: 6c3ebfa3bc01e4964b93f09d08b6ca37, type: 2}
     colorChance: 0.5
-  - color: {r: 0, g: 0.45698738, b: 1, a: 1}
+  - colorDataSO: {fileID: 11400000, guid: 41634a1e9eaf048c2a2b24a8d2b05d91, type: 2}
     colorChance: 0.5

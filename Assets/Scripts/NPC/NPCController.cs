@@ -17,7 +17,7 @@ namespace BoxSortingGame
 
         #region States
 
-        private IStateNPC _idleState = new IdleStateNPC();
+        private IStateNPC _idleState;
         public IStateNPC IdleState => _idleState;
         
         private IStateNPC _moveToBoxState = new MoveToBoxStateNPC();
@@ -26,17 +26,31 @@ namespace BoxSortingGame
         private IStateNPC _collectBoxState = new CollectBoxStateNPC();
         public IStateNPC CollectBoxState => _collectBoxState;
         
-        private MoveToDropZoneStateNPC _moveToDropZoneState = new MoveToDropZoneStateNPC();
-        private DropBoxStateNPC _dropBoxState = new DropBoxStateNPC();
+        private IStateNPC _moveToDropZoneState;
+        public IStateNPC MoveToDropZoneState => _moveToDropZoneState;
+        
+        private IStateNPC _dropBoxState = new DropBoxStateNPC();
+        public IStateNPC DropBoxState => _dropBoxState;
 
         #endregion
 
+        [Inject] private BoxModel _boxModel;
+        [Inject] private DropZoneModel _dropZoneModel;
+        
         private BoxController _boxTarget;
         public BoxController BoxTarget => _boxTarget;
 
-        public void Initialize(IStateNPC initialState)
+        private void Start()
         {
-            ChangeState(initialState);
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            _idleState = new IdleStateNPC(_boxModel);
+            _moveToDropZoneState = new MoveToDropZoneStateNPC(_dropZoneModel);
+            
+            ChangeState(_idleState);
         }
         
         public void ChangeState(IStateNPC newState)
@@ -62,10 +76,8 @@ namespace BoxSortingGame
         public void SetBoxTarget(BoxController boxController)
         {
             _boxTarget = boxController;
-            _boxTarget.transform.SetParent(transform);
-            _boxTarget.transform.position = transform.position;
         }
-        
+
         private async UniTask StateExecute()
         {
             while (!_cancellationTokenSource.Token.IsCancellationRequested)

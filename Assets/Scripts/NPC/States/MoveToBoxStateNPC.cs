@@ -7,8 +7,11 @@ namespace BoxSortingGame
     public class MoveToBoxStateNPC : IStateNPC
     {
         private NPCController _npc;
-        private float _speed = 0.5f;
-        private float _movementDelayInSeconds = 1f;
+        
+        //TODO move to config
+        private float _speed = 1f;
+        private float _movementDelayInSeconds = 0.25f;
+        private float _minDistanceToTarget = 1f;
         public void Enter(NPCController npc)
         {
             _npc = npc;
@@ -18,16 +21,16 @@ namespace BoxSortingGame
         {
             if (_npc.BoxTarget == null)
             {
-                _npc.ChangeState(_npc.IdleState);
                 return;
             }
 
+            //TODO move to NPCMovement?
             var boxPosition = (Vector2)_npc.BoxTarget.transform.position;
             var direction = (boxPosition - _npc.Rigidbody.position).normalized;
 
             _npc.Rigidbody.linearVelocity = direction * _speed;
-            
-            if (Vector2.Distance(_npc.Rigidbody.position, boxPosition) < 0.1f)
+
+            if (Vector2.Distance(_npc.Rigidbody.position, boxPosition) < _minDistanceToTarget)
             {
                 _npc.ChangeState(_npc.CollectBoxState);
             }
@@ -37,7 +40,10 @@ namespace BoxSortingGame
 
         public void Exit()
         {
-
+            if(_npc== null)
+                return;
+            
+            _npc.Rigidbody.linearVelocity = Vector2.zero;
         }
     }
 }
