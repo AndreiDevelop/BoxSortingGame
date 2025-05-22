@@ -37,7 +37,7 @@ namespace BoxSortingGame
             
             if (Prefabs.ContainsKey(key))
             {
-                if(PoolableObjects.ContainsKey(key) || PoolableObjects[key].Count == 0)
+                if(!PoolableObjects.ContainsKey(key) || PoolableObjects[key].Count == 0)
                 {
                     //extend pool size
                     await InstantiatePoolObject<T>(_defaultPoolExtendSize);
@@ -74,6 +74,7 @@ namespace BoxSortingGame
             for (int i = 0; i < count; i++)
             {
                 GameObject obj = Instantiate(prefab);
+                obj.transform.SetParent(transform);
                 obj.SetActive(false);
                 PoolableObjects[key].Enqueue(obj);
 

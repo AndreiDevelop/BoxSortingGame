@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace BoxSortingGame
                 }
             }).AddTo(this);
             
-            _dropZoneModel.OnDropZoneDataChanged.Subscribe(dropZoneData =>
+            _dropZoneModel.OnBoxDroped.Subscribe(dropZoneData =>
             {
                 if (dropZoneData.id.Equals(DropZoneId))
                 {
@@ -43,6 +44,15 @@ namespace BoxSortingGame
                 }
             }).AddTo(this);
 
+            _dropZoneModel.DropZoneBoxes
+                .ObserveAdd()
+                .Where(x => x.Key.Equals(DropZoneId))
+                .Subscribe(x =>
+                {
+                    x.Value.Last().transform.SetParent(transform);
+                })
+                .AddTo(this);
+            
             UpdateTextCount();
         }
 

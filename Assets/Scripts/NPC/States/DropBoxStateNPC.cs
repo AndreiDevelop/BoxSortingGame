@@ -14,7 +14,7 @@ namespace BoxSortingGame
         public void Enter(NPCController npc)
         {
             npc.BoxTarget.DeattachBox();
-            _dropZoneModel.DropBoxOnSelectedDropZone();
+            _dropZoneModel.DropBoxOnSelectedDropZone(npc.BoxTarget.transform);
             
             npc.ChangeState(npc.IdleState);
         }
