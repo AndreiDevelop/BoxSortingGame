@@ -28,6 +28,7 @@ namespace BoxSortingGame
             var boxPosition = (Vector2)_npc.BoxTarget.transform.position;
             var direction = (boxPosition - _npc.Rigidbody.position).normalized;
 
+            _npc.ChangeDirection(direction);
             _npc.Rigidbody.linearVelocity = direction * _speed;
 
             if (Vector2.Distance(_npc.Rigidbody.position, boxPosition) < _minDistanceToTarget)

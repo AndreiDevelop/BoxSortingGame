@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3959141d6e962471e962752bf2dc4b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _view: {fileID: 6267690400818708375}
   _rigidbody: {fileID: 3691838010843727401}
 --- !u!50 &3691838010843727401
 Rigidbody2D:
@@ -148,7 +149,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.36, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3184856030383804468}
@@ -196,8 +197,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9a1a0105c154d4c3e8a6ed7f11a0ac19, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 735a8ebc984bb45fa84e93e7eac65458, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

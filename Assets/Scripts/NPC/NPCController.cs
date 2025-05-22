@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace BoxSortingGame
@@ -10,6 +11,7 @@ namespace BoxSortingGame
     //TODO separate for NPCModel and NPCPresenter
     public class NPCController : MonoBehaviour, IDisposable
     {
+        [SerializeField] private SpriteRenderer _view;
         [SerializeField] private Rigidbody2D _rigidbody;
 
         private IStateNPC _currentState;
@@ -90,6 +92,13 @@ namespace BoxSortingGame
             _boxTarget = boxController;
         }
 
+        public void ChangeDirection(Vector2 direction)
+        {
+            direction = direction.normalized;
+
+            _view.flipX = direction.x < 0;
+        }
+        
         private async UniTask StateExecute()
         {
             while (!_stateExecutionCancellationTokenSource.Token.IsCancellationRequested)

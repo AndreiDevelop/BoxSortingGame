@@ -44,6 +44,7 @@ namespace BoxSortingGame
             var position = (Vector2)_dropZoneTarget.position;
             var direction = (position - _npc.Rigidbody.position).normalized;
 
+            _npc.ChangeDirection(direction);
             _npc.Rigidbody.linearVelocity = direction * _speed;
 
             if (Vector2.Distance(_npc.Rigidbody.position, position) < _minDistanceToTarget)
