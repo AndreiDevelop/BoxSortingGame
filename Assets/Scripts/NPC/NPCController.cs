@@ -28,8 +28,8 @@ namespace BoxSortingGame
         
         private IStateNPC _moveToDropZoneState;
         public IStateNPC MoveToDropZoneState => _moveToDropZoneState;
-        
-        private IStateNPC _dropBoxState = new DropBoxStateNPC();
+
+        private IStateNPC _dropBoxState;
         public IStateNPC DropBoxState => _dropBoxState;
 
         #endregion
@@ -49,6 +49,7 @@ namespace BoxSortingGame
         {
             _idleState = new IdleStateNPC(_boxModel);
             _moveToDropZoneState = new MoveToDropZoneStateNPC(_dropZoneModel);
+            _dropBoxState = new DropBoxStateNPC(_dropZoneModel);
             
             ChangeState(_idleState);
         }

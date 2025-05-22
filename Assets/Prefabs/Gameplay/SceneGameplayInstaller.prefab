@@ -78,4 +78,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boxSettingsSO: {fileID: 11400000, guid: 4f9d6163fcfb44a24a22531d137af25e, type: 2}
+  _dropZoneSettingsSO: {fileID: 11400000, guid: 74ed0b2ce29564359953da8937aecafa, type: 2}
   _poolManager: {fileID: 0}

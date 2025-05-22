@@ -7,6 +7,7 @@ namespace BoxSortingGame
     {
         [Header("SO")]
         [SerializeField] private BoxSettingsSO _boxSettingsSO;
+        [SerializeField] private DropZoneSettingsSO _dropZoneSettingsSO;
         
         [Header("Managers")]
         [SerializeField] private PoolManager _poolManager;
@@ -22,7 +23,9 @@ namespace BoxSortingGame
                 FromInstance(boxModel).
                 AsSingle();
             
+            var dropZoneModel = new DropZoneModel(_dropZoneSettingsSO);
             Container.Bind<DropZoneModel>().
+                FromInstance(dropZoneModel).
                 AsSingle();
         }
     }

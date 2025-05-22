@@ -765,10 +765,6 @@ PrefabInstance:
       propertyPath: _poolManager
       value: 
       objectReference: {fileID: 7055700477783089335}
-    - target: {fileID: 2402538072488252484, guid: 0b79cb5276c1e460680ea993c8b2173a, type: 3}
-      propertyPath: _boxSettingsSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 4f9d6163fcfb44a24a22531d137af25e, type: 2}
     - target: {fileID: 3616222626611421847, guid: 0b79cb5276c1e460680ea993c8b2173a, type: 3}
       propertyPath: m_Name
       value: SceneGameplayInstaller
@@ -843,6 +839,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2708384046538151698, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3592039913506178824, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -887,10 +887,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: DropZones
       objectReference: {fileID: 0}
+    - target: {fileID: 7361964534703667024, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3542908146779917125, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 8256821591876528903, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 5ffe880516f5642b9a3d544356be9ae6, type: 3}
 --- !u!1001 &5230645836171741868
 PrefabInstance:

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _boxPrefab: {fileID: 7075909227916581699, guid: 57b35db96dc284890a59117279dc1348, type: 3}
   _maxBoxCount: 10
-  _boxSpawnDelayInSeconds: 1
+  _boxSpawnRangeDelayInSeconds: {x: 1, y: 2}
   _boxColors:
   - colorDataSO: {fileID: 11400000, guid: 6c3ebfa3bc01e4964b93f09d08b6ca37, type: 2}
     colorChance: 0.5
