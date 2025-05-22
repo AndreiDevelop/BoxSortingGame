@@ -18,15 +18,17 @@ namespace BoxSortingGame
                 FromInstance(_poolManager).
                 AsSingle();
 
-            var boxModel = new BoxModel(_boxSettingsSO, _poolManager);
-            Container.Bind<BoxModel>().
-                FromInstance(boxModel).
-                AsSingle();
-            
             var dropZoneModel = new DropZoneModel(_dropZoneSettingsSO);
             Container.Bind<DropZoneModel>().
                 FromInstance(dropZoneModel).
                 AsSingle();
+            
+            var boxModel = new BoxModel(_boxSettingsSO, _poolManager, dropZoneModel);
+            Container.Bind<BoxModel>().
+                FromInstance(boxModel).
+                AsSingle();
+            
+            
         }
     }
 }

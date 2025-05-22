@@ -8,31 +8,38 @@ using Zenject;
 
 namespace BoxSortingGame
 {
-    public class BoxModel
+    public class BoxModel : IDisposable
     {
         public ReactiveCommand<BoxController> OnBoxSpawned = new ReactiveCommand<BoxController>();
+        public ReactiveCollection<BoxController> Boxes = new ReactiveCollection<BoxController>();
         
         private PoolManager _poolManager;
+        private DropZoneModel _dropZoneModel;
         private BoxSettingsSO _boxSettings;
         
-        private List<BoxController> _boxes = new List<BoxController>();
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        public int MaxBoxCount => _boxSettings.MaxBoxCount;
         
-        public BoxModel(BoxSettingsSO boxSettings, PoolManager poolManager)
+        private CancellationTokenSource _spawnCancellationTokenSource = new CancellationTokenSource();
+        
+        public BoxModel(BoxSettingsSO boxSettings, 
+            PoolManager poolManager,
+            DropZoneModel dropZoneModel)
         {
             _poolManager = poolManager;
             _boxSettings = boxSettings;
+            _dropZoneModel = dropZoneModel;
 
+            CancelSpawn();
+            _spawnCancellationTokenSource.Dispose();
+            _spawnCancellationTokenSource = new CancellationTokenSource();
+
+            _dropZoneModel.OnDropZoneFull.Subscribe(_ =>
+            {
+                CancelSpawn();
+            }).AddTo(_spawnCancellationTokenSource.Token);
+            
             _poolManager.AddToPool<BoxController>(_boxSettings.BoxPrefab, _boxSettings.MaxBoxCount);
 
-            if (_cancellationTokenSource.Token.CanBeCanceled)
-            {
-                _cancellationTokenSource.Cancel();
-            }
-            
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
-            
             SpawnBoxProcess().
                 Forget();
         }
@@ -50,18 +57,18 @@ namespace BoxSortingGame
             
             boxController.Initialize(this, boxColor);
 
-            _boxes.Add(boxController);
+            Boxes.Add(boxController);
             OnBoxSpawned?.Execute(boxController);
         }
 
         public async UniTask SpawnBoxProcess()
         {
-            while (true)
+            while (!_spawnCancellationTokenSource.Token.IsCancellationRequested)
             {
                 await UniTask.WaitForSeconds(_boxSettings.BoxSpawnDelayInSeconds, 
-                    cancellationToken: _cancellationTokenSource.Token);
+                    cancellationToken: _spawnCancellationTokenSource.Token);
                 
-                if (_boxes.Count < _boxSettings.MaxBoxCount)
+                if (Boxes.Count < _boxSettings.MaxBoxCount)
                 {
                     await SpawnBox();
                 }
@@ -73,14 +80,14 @@ namespace BoxSortingGame
             BoxController selectedBox = null;
             float maxDistance = float.MaxValue;
 
-            for(int i = 0; i < _boxes.Count; i++)
+            for(int i = 0; i < Boxes.Count; i++)
             {
-                if (_boxes[i] == null)
+                if (Boxes[i] == null)
                 {
                     continue;
                 }
                 
-                var box = _boxes[i];
+                var box = Boxes[i];
                 float distance = Vector2.Distance(position, box.transform.position);
                 if (distance < maxDistance)
                 {
@@ -93,10 +100,38 @@ namespace BoxSortingGame
 
             if (selectedBox != null)
             {
-                _boxes.Remove(selectedBox);
+                Boxes.Remove(selectedBox);
             }
 
             return selectedBox;
+        }
+
+        private void CancelSpawn()
+        {
+            if (_spawnCancellationTokenSource.Token.CanBeCanceled)
+            {
+                _spawnCancellationTokenSource.Cancel();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_spawnCancellationTokenSource != null)
+            {
+                CancelSpawn();
+                _spawnCancellationTokenSource.Dispose();
+                _spawnCancellationTokenSource = null;
+            }
+
+            if (Boxes != null)
+            {
+                Boxes.Clear();
+            }
+
+            if (OnBoxSpawned != null)
+            {
+                OnBoxSpawned.Dispose();
+            }
         }
     }
 }

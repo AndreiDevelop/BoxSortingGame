@@ -1,17 +1,19 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
 namespace BoxSortingGame
 {
-    public class NPCController : MonoBehaviour
+    //TODO separate for NPCModel and NPCPresenter
+    public class NPCController : MonoBehaviour, IDisposable
     {
         [SerializeField] private Rigidbody2D _rigidbody;
 
         private IStateNPC _currentState;
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private CancellationTokenSource _stateExecutionCancellationTokenSource = new CancellationTokenSource();
         
         public Rigidbody2D Rigidbody => _rigidbody;
 
@@ -40,8 +42,13 @@ namespace BoxSortingGame
         private BoxController _boxTarget;
         public BoxController BoxTarget => _boxTarget;
 
+        private bool _isExecutingRequired = true;
+        
         private void Start()
         {
+            _stateExecutionCancellationTokenSource.Dispose();
+            _stateExecutionCancellationTokenSource = new CancellationTokenSource();
+            
             Initialize();
         }
 
@@ -51,21 +58,25 @@ namespace BoxSortingGame
             _moveToDropZoneState = new MoveToDropZoneStateNPC(_dropZoneModel);
             _dropBoxState = new DropBoxStateNPC(_dropZoneModel);
             
+            _dropZoneModel.OnDropZoneFull
+                .Subscribe(_=>
+                {
+                    _isExecutingRequired = false;
+                    CancelStateExecution();
+                })
+                .AddTo(this);
+            
             ChangeState(_idleState);
         }
         
         public void ChangeState(IStateNPC newState)
         {
-            if (_currentState == newState)
+            if (_currentState == newState || !_isExecutingRequired)
                 return;
 
-            if (_cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                _cancellationTokenSource.Cancel();
-            }
-
-            _cancellationTokenSource.Dispose();
-            _cancellationTokenSource = new CancellationTokenSource();
+            CancelStateExecution();
+            _stateExecutionCancellationTokenSource.Dispose();
+            _stateExecutionCancellationTokenSource = new CancellationTokenSource();
             
             _currentState?.Exit();
             _currentState = newState;
@@ -81,9 +92,9 @@ namespace BoxSortingGame
 
         private async UniTask StateExecute()
         {
-            while (!_cancellationTokenSource.Token.IsCancellationRequested)
+            while (!_stateExecutionCancellationTokenSource.Token.IsCancellationRequested)
             {
-                await UniTask.Yield(_cancellationTokenSource.Token);
+                await UniTask.Yield(_stateExecutionCancellationTokenSource.Token);
                 
                 if (_currentState != null)
                 {
@@ -94,6 +105,22 @@ namespace BoxSortingGame
                     await UniTask.CompletedTask;
                 }
             }
+        }
+
+        private void CancelStateExecution()
+        {
+            if(_stateExecutionCancellationTokenSource.Token.CanBeCanceled)
+            {
+                _stateExecutionCancellationTokenSource.Cancel();
+            }
+        }
+
+        public void Dispose()
+        {
+            CancelStateExecution();
+            
+            _stateExecutionCancellationTokenSource.Dispose();
+            _stateExecutionCancellationTokenSource = null;
         }
     }
 }
