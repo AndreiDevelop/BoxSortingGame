@@ -16,10 +16,7 @@ namespace BoxSortingGame
         private BoxSettingsSO _boxSettings;
         
         private List<BoxController> _boxes = new List<BoxController>();
-
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        
-        private bool _isLockedForSearch = false;
         
         public BoxModel(BoxSettingsSO boxSettings, PoolManager poolManager)
         {
@@ -27,6 +24,14 @@ namespace BoxSortingGame
             _boxSettings = boxSettings;
 
             _poolManager.AddToPool<BoxController>(_boxSettings.BoxPrefab, _boxSettings.MaxBoxCount);
+
+            if (_cancellationTokenSource.Token.CanBeCanceled)
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = new CancellationTokenSource();
             
             SpawnBoxProcess().
                 Forget();
@@ -45,32 +50,37 @@ namespace BoxSortingGame
             
             boxController.Initialize(this, boxColor);
 
-            await UniTask.WaitWhile(() => _isLockedForSearch);
-            
             _boxes.Add(boxController);
             OnBoxSpawned?.Execute(boxController);
         }
 
         public async UniTask SpawnBoxProcess()
         {
-            while (_boxes.Count < _boxSettings.MaxBoxCount)
+            while (true)
             {
-                //TODO make random delay
-                await UniTask.WaitForSeconds(_boxSettings.BoxSpawnDelayInSeconds);
-                await SpawnBox();
+                await UniTask.WaitForSeconds(_boxSettings.BoxSpawnDelayInSeconds, 
+                    cancellationToken: _cancellationTokenSource.Token);
+                
+                if (_boxes.Count < _boxSettings.MaxBoxCount)
+                {
+                    await SpawnBox();
+                }
             }
         }
 
         public async UniTask<BoxController> GetBoxByDistance(Vector2 position)
         {
-            _isLockedForSearch = true;
-            
             BoxController selectedBox = null;
             float maxDistance = float.MaxValue;
-            
-            //TODO fix error
-            foreach (var box in _boxes)
+
+            for(int i = 0; i < _boxes.Count; i++)
             {
+                if (_boxes[i] == null)
+                {
+                    continue;
+                }
+                
+                var box = _boxes[i];
                 float distance = Vector2.Distance(position, box.transform.position);
                 if (distance < maxDistance)
                 {
@@ -85,8 +95,7 @@ namespace BoxSortingGame
             {
                 _boxes.Remove(selectedBox);
             }
-            
-            _isLockedForSearch = false;
+
             return selectedBox;
         }
     }
