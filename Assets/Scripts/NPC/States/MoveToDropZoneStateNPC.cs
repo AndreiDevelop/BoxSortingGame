@@ -10,12 +10,7 @@ namespace BoxSortingGame
         private Transform _dropZoneTarget;
         
         private DropZoneModel _dropZoneModel;
-        
-        //TODO move to config
-        private float _speed = 1f;
-        private float _movementDelayInSeconds = 0.25f;
-        private float _minDistanceToTarget = 1f;
-        
+
         public MoveToDropZoneStateNPC(DropZoneModel dropZoneModel)
         {
             _dropZoneModel = dropZoneModel;
@@ -40,19 +35,10 @@ namespace BoxSortingGame
                 return;
             }
 
-            //TODO move to NPCMovement?
-            var position = (Vector2)_dropZoneTarget.position;
-            var direction = (position - _npc.Rigidbody.position).normalized;
-
-            _npc.ChangeDirection(direction);
-            _npc.Rigidbody.linearVelocity = direction * _speed;
-
-            if (Vector2.Distance(_npc.Rigidbody.position, position) < _minDistanceToTarget)
+            await _npc.NpcMove.Move(_dropZoneTarget, ()=>
             {
                 _npc.ChangeState(_npc.DropBoxState);
-            }
-
-            await UniTask.WaitForSeconds(_movementDelayInSeconds);
+            });
         }
 
         public void Exit()

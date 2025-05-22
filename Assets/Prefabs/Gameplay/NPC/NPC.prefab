@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3959141d6e962471e962752bf2dc4b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _npcSettings: {fileID: 11400000, guid: fb643666427a84ae7abb0e22c960f6a0, type: 2}
   _view: {fileID: 6267690400818708375}
   _rigidbody: {fileID: 3691838010843727401}
 --- !u!50 &3691838010843727401

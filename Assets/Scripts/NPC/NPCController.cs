@@ -11,13 +11,14 @@ namespace BoxSortingGame
     //TODO separate for NPCModel and NPCPresenter
     public class NPCController : MonoBehaviour, IDisposable
     {
+        [SerializeField] private NPCSettingsSO _npcSettings;
         [SerializeField] private SpriteRenderer _view;
+        
         [SerializeField] private Rigidbody2D _rigidbody;
+        public Rigidbody2D Rigidbody => _rigidbody;
 
         private IStateNPC _currentState;
         private CancellationTokenSource _stateExecutionCancellationTokenSource = new CancellationTokenSource();
-        
-        public Rigidbody2D Rigidbody => _rigidbody;
 
         #region States
 
@@ -44,6 +45,9 @@ namespace BoxSortingGame
         private BoxController _boxTarget;
         public BoxController BoxTarget => _boxTarget;
 
+        private NPCMove _npcMove;
+        public NPCMove NpcMove => _npcMove;
+        
         private bool _isExecutingRequired = true;
         
         private void Start()
@@ -56,10 +60,12 @@ namespace BoxSortingGame
 
         public void Initialize()
         {
+            _npcMove = new NPCMove(this, _npcSettings);
+            
             _idleState = new IdleStateNPC(_boxModel);
             _moveToDropZoneState = new MoveToDropZoneStateNPC(_dropZoneModel);
             _dropBoxState = new DropBoxStateNPC(_dropZoneModel);
-            
+
             _dropZoneModel.OnDropZoneFull
                 .Subscribe(_=>
                 {
