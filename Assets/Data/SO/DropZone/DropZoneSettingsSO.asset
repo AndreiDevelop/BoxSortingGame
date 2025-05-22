@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 802cac6f9e15b452594b0faf635015e3, type: 3}
   m_Name: DropZoneSettingsSO
   m_EditorClassIdentifier: 
-  _maxBoxCount: 7
+  _maxBoxCount: 2
