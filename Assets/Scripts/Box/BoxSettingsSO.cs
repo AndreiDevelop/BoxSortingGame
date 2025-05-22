@@ -16,12 +16,13 @@ namespace BoxSortingGame
     {
         [SerializeField] private GameObject _boxPrefab;
         [SerializeField] private int _maxBoxCount;
-        [SerializeField] private float _boxSpawnDelayInSeconds;
+        [SerializeField] private Vector2 _boxSpawnRangeDelayInSeconds;
         [SerializeField] private List<BoxColor> _boxColors;
         
         public GameObject BoxPrefab => _boxPrefab;
         public int MaxBoxCount => _maxBoxCount;
-        public float BoxSpawnDelayInSeconds => _boxSpawnDelayInSeconds;
+        public float BoxSpawnDelayInSeconds => 
+            Random.Range(_boxSpawnRangeDelayInSeconds.x, _boxSpawnRangeDelayInSeconds.y);
 
         public ColorData GetBoxColorData(float chance)
         {
